@@ -21,7 +21,7 @@ class AliCloudRamPolicy < AliCloudResourceBase
   attr_reader :policy_name, :default_version, :policy_document,
               :attached_users, :attached_roles, :attached_groups,
               :attached_user_count, :attached_role_count, :attached_group_count,
-              :attachment_count
+              :attachment_count, :policy_type
 
   def initialize(opts = {})
     opts = { policy_name: opts } if opts.is_a?(String)
@@ -45,6 +45,7 @@ class AliCloudRamPolicy < AliCloudResourceBase
     @policy_name = opts[:policy_name]
     @default_version = @resp["Policy"]["DefaultVersion"]
     @policy_document = @resp["DefaultPolicyVersion"]["PolicyDocument"]
+    @policy_type = @resp["Policy"]["PolicyType"]
 
     @attached_users = @attached_groups = @attached_roles = @attachment_count = 0
 
@@ -122,7 +123,7 @@ class AliCloudRamPolicy < AliCloudResourceBase
         params: {
           RegionId: opts[:region],
           PolicyName: opts[:policy_name],
-          PolicyType: policy_type,
+          PolicyType: opts[:type],
         },
         opts: {
           method: "POST",

@@ -20,6 +20,7 @@ class AliCloudRamPolicies < AliCloudResourceBase
     .register_column(:attached_groups,   field: :attached_groups)
     .register_column(:attached_roles,    field: :attached_roles)
     .register_column(:attached_users,    field: :attached_users)
+    .register_column(:policy_types,      field: :policy_type)
     .install_filter_methods_on_resource(self, :table)
 
   def initialize(opts = {})
@@ -47,7 +48,8 @@ class AliCloudRamPolicies < AliCloudResourceBase
         unless opts[:only_attached] && policy["AttachmentCount"] == 0
           row = { policy_name:      policy["PolicyName"],
                   default_version:  policy["DefaultVersion"],
-                  attachment_count: policy["AttachmentCount"] }
+                  attachment_count: policy["AttachmentCount"],
+                  policy_type:      policy["PolicyType"] }
 
           if policy["AttachmentCount"] > 0
             attached_entities = get_attached_entities(opts.merge({ policy_name: policy["PolicyName"] }))
